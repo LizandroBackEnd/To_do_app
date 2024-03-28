@@ -6,7 +6,19 @@ import { todosData } from '../data/todos';
 export default function Home() { 
     const [localData, setLocalData] = React.useState(  
         todosData.sort((a, b) => {return a.isCompleted - b.isCompleted})
-    );
+    ); 
+    const [isHiden, setIsHiden] = React.useState(false); 
+     
+    const handleHidePress = () => { 
+        if ( isHiden) { 
+            setIsHiden(false) 
+            setLocalData(todosData.sort((a, b) => {return a.isCompleted - b.isCompleted})) 
+            return;
+        } 
+        setIsHiden(!isHiden) 
+        setLocalData(localData.filter(todo => !todo.isCompleted))
+    } 
+
   return ( 
     <View style={styles.container}>  
         <Image  
@@ -15,8 +27,8 @@ export default function Home() {
         />    
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}> 
             <Text style={styles.title}>Today</Text>  
-            <TouchableOpacity>  
-            <Text style={{ color: '#3478f6' }}>Hide Completed</Text>     
+            <TouchableOpacity onPress={handleHidePress}>  
+            <Text style={{ color: '#3478f6' }}>{isHiden ? "Show Completed" : "Hide Completed"}</Text>     
             </TouchableOpacity> 
         </View>
         <TodoList todosData={localData.filter(todo => todo.isToday)} />
