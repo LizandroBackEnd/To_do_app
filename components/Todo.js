@@ -31,7 +31,7 @@ export default function Todo({
 const styles = StyleSheet.create({  
     container: {   
         marginTop: 45,
-        marginBottom: 20, 
+        marginBottom: 5, 
         flexDirection: 'row', 
         alignItems: 'center'
     }, 
