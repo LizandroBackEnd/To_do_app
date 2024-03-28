@@ -30,7 +30,7 @@ export default function Todo({
  
 const styles = StyleSheet.create({  
     container: {   
-        marginTop: 45,
+        marginTop: 30,
         marginBottom: 5, 
         flexDirection: 'row', 
         alignItems: 'center'
