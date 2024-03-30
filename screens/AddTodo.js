@@ -30,16 +30,15 @@ export default function AddTodo() {
             <View style={styles.inputContainer}>  
                 <Text style={styles.inputTitle}>Hour</Text>  
                  
-                <TouchableOpacity style={styles.buttonPicker} onPress={() => setShowPicker(true)}> 
-                    <View style={styles.iconWithText}>
-                        <Icon name="clock" size={20} color="#fff" />
-                        <Text style={styles.buttonText}>Select</Text>
-                    </View>
+                <TouchableOpacity style={styles.buttonPicker} onPress={() => setShowPicker(true)}>  
+                    <Text style={styles.textPicker}>
+                        {date.getHours().toString().padStart(2, '0')}:{date.getMinutes().toString().padStart(2, '0')}
+                    </Text>
                 </TouchableOpacity>
                 {showPicker && (
                     <DateTimePicker   
                         value={date} 
-                        mode={'time'}
+                        mode={'time'} 
                         is24Hour={true} 
                         onChange={onChange} 
                         style={{ width: '80%' }} 
@@ -99,18 +98,15 @@ const styles = StyleSheet.create({
         borderRadius: 11,
     },  
     buttonPicker: { 
-        backgroundColor: '#000000', 
+        backgroundColor: '#fff', 
         padding: 10, 
         borderRadius: 5,
         alignItems: 'center',
-    }, 
-    iconWithText: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: '#fff',
-        marginLeft: 10, 
-    },
+    },  
+    textPicker: { 
+        fontSize: 15, 
+        fontWeight: '500', 
+        color:'#737373'
+    }
 
 })
