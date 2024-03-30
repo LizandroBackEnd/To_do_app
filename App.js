@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";  
 import { createStackNavigator } from "@react-navigation/stack";
-import Home from "./screens/Home";
+import Home from "./screens/Home"; 
+import AddTodo from "./screens/AddTodo";
 
 const Stack = createStackNavigator();  
 
@@ -10,7 +11,13 @@ export default function App() {
       <Stack.Navigator> 
         <Stack.Screen   
           name="Home" 
-          component={Home} 
+          component={Home}  
+          options={{ headerShown: false }}
+        /> 
+        <Stack.Screen  
+          name="Add" 
+          component={AddTodo} 
+          options={{ presentation: 'modal' }} 
         />
       </Stack.Navigator>
     </NavigationContainer>
