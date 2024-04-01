@@ -2,23 +2,28 @@ import * as React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native'; 
 import TodoList from '../components/TodoList'; 
 import { todosData } from '../data/todos'; 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native'; 
+import { useSelector, UseDispatch } from 'react-redux'; 
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import { hideCompletedReducer, setTodosReducer } from '../redux/todosSlice';
 
 export default function Home() { 
-    const [localData, setLocalData] = React.useState(  
-        todosData.sort((a, b) => {return a.isCompleted - b.isCompleted})
-    ); 
+   
+    const todos = useSelector(state => state.todos.todos);
+    //const [localData, setLocalData] = React.useState(  
+    //  todosData.sort((a, b) => {return a.isCompleted - b.isCompleted})
+    //); 
     const [isHiden, setIsHiden] = React.useState(false);  
     const navigation = useNavigation();
      
     const handleHidePress = () => { 
-        if ( isHiden) { 
-            setIsHiden(false) 
-            setLocalData(todosData.sort((a, b) => {return a.isCompleted - b.isCompleted})) 
-            return;
-        } 
-        setIsHiden(!isHiden) 
-        setLocalData(localData.filter(todo => !todo.isCompleted))
+        //if ( isHiden) { 
+         //   setIsHiden(false) 
+          //  setLocalData(todosData.sort((a, b) => {return a.isCompleted - b.isCompleted})) 
+          //  return;
+        //} 
+        //setIsHiden(!isHiden) 
+        //setLocalData(localData.filter(todo => !todo.isCompleted))
     } 
 
   return ( 
@@ -33,9 +38,9 @@ export default function Home() {
             <Text style={{ color: '#3478f6' }}>{isHiden ? "Show Completed" : "Hide Completed"}</Text>     
             </TouchableOpacity> 
         </View>
-        <TodoList todosData={localData.filter(todo => todo.isToday)} />
+        <TodoList todosData={todos.filter(todo => todo.isToday)} />
         <Text style={styles.title}>Tomorrow</Text>  
-        <TodoList todosData={todosData.filter(todo => !todo.isToday)} />
+        <TodoList todosData={todos.filter(todo => !todo.isToday)} />
         <TodoList /> 
          
         <TouchableOpacity onPress={() => navigation.navigate("Add")} style={styles.button}>   
