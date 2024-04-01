@@ -1,7 +1,7 @@
 import * as React from 'react';  
 import { View, Text, TouchableOpacity, StyleSheet, Button, TextInput, Switch} from 'react-native';  
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
  
 export default function AddTodo() {  
     const [name, setName] = React.useState(''); 

@@ -1,26 +1,31 @@
 import { NavigationContainer } from "@react-navigation/native";  
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "./screens/Home"; 
-import AddTodo from "./screens/AddTodo";
+import AddTodo from "./screens/AddTodo"; 
+import { store } from "./redux/store"; 
+import { Provider } from "react-redux";
 
 const Stack = createStackNavigator();  
 
 export default function App() {
-  return (  
-    <NavigationContainer> 
-      <Stack.Navigator> 
-        <Stack.Screen   
-          name="Home" 
-          component={Home}  
-          options={{ headerShown: false }}
-        /> 
-        <Stack.Screen  
-          name="Add" 
-          component={AddTodo} 
-          options={{ presentation: 'modal' }} 
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+  return (   
+    <Provider store={store}>   
+      <NavigationContainer> 
+        <Stack.Navigator> 
+          <Stack.Screen   
+            name="Home" 
+            component={Home}  
+            options={{ headerShown: false }}
+          /> 
+          <Stack.Screen  
+            name="Add" 
+            component={AddTodo} 
+            options={{ presentation: 'modal' }} 
+          />
+        </Stack.Navigator>
+     </NavigationContainer> 
+    </Provider>
+    
   );
 }
  
