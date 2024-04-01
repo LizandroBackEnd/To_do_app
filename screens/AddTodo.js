@@ -1,19 +1,43 @@
 import * as React from 'react';  
 import { View, Text, TouchableOpacity, StyleSheet, Button, TextInput, Switch} from 'react-native';  
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import { useDispatch, useSelector } from 'react-redux'; 
+import { addTodoReducer } from '../redux/todosSlice'; 
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import { useNavigation } from '@react-navigation/native';
  
 export default function AddTodo() {  
     const [name, setName] = React.useState(''); 
     const [date, setDate] = React.useState(new Date()); 
     const [isToday, setIsToday] = React.useState(false); 
     const [showPicker, setShowPicker] = React.useState(false); 
+    const listTodos = useSelector(state => state.todos.todos);  
+    const dispatch = useDispatch(); 
+    const navigation = useNavigation();
      
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setDate(currentDate);
         setShowPicker(false); 
-    }; 
+    };  
+     
+    const addTodo = async () => { 
+        const newTodo = { 
+            id: Math.floor(Math.random() * 1000000), 
+            text: name,  
+            hour: date.toString(), 
+            isToday: isToday, 
+            isCompleted: false,
+        } 
+        try { 
+            await AsyncStorage.setItem("@Todos", JSON.stringify([...listTodos, newTodo])); 
+            dispatch(addTodoReducer(newTodo)); 
+            console.log('Todo saved successfully'); 
+            navigation.goBack();
+        } catch (e) { 
+            console.log(e);
+        }
+    }
 
     return ( 
         <View style={styles.container}> 
@@ -52,7 +76,7 @@ export default function AddTodo() {
                     onValueChange={(value) => {setIsToday(value)}} 
                 /> 
             </View>  
-            <TouchableOpacity style={styles.button}> 
+            <TouchableOpacity style={styles.button} onPress={addTodo}> 
                 <Text style={{ color: '#fff' }}>Done</Text>
             </TouchableOpacity> 
             <Text style={{ color: '#00000060' }}>If you disable today, the task will be considered as tomorrow</Text>
