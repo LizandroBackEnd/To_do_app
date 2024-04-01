@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import TodoList from '../components/TodoList'; 
 import { todosData } from '../data/todos'; 
 import { useNavigation } from '@react-navigation/native'; 
-import { useSelector, UseDispatch } from 'react-redux'; 
+import { useSelector, UseDispatch, useDispatch } from 'react-redux'; 
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import { hideCompletedReducer, setTodosReducer } from '../redux/todosSlice';
 
@@ -14,7 +14,22 @@ export default function Home() {
     //  todosData.sort((a, b) => {return a.isCompleted - b.isCompleted})
     //); 
     const [isHiden, setIsHiden] = React.useState(false);  
-    const navigation = useNavigation();
+    const navigation = useNavigation(); 
+    const dispatch = useDispatch();
+     
+    React.useEffect(() => { 
+      const getTodos = async () => { 
+        try { 
+          const todos = await AsyncStorage.getItem("@Todos"); 
+          if(todos !== null) { 
+            dispatch(setTodosReducer(JSON.parse(todos)));
+          }
+        } catch(e) { 
+          console.log(e);
+        }
+      } 
+      getTodos();
+    }, []);
      
     const handleHidePress = () => { 
         //if ( isHiden) { 
