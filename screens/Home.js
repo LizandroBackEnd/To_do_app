@@ -29,17 +29,23 @@ export default function Home() {
         }
       } 
       getTodos();
-    }, []);
+    }, []); 
      
-    const handleHidePress = () => { 
-        //if ( isHiden) { 
-         //   setIsHiden(false) 
-          //  setLocalData(todosData.sort((a, b) => {return a.isCompleted - b.isCompleted})) 
-          //  return;
-        //} 
-        //setIsHiden(!isHiden) 
-        //setLocalData(localData.filter(todo => !todo.isCompleted))
+    const handleHidePress = async () => { 
+      if(isHiden) { 
+        setIsHiden(false); 
+        const todos = await AsyncStorage.getItem("@Todos"); 
+        if(todos !== null) { 
+          dispatch(setTodosReducer(JSON.parse(todos)));
+        } 
+        return;
+      } 
+       
+      setIsHiden(true); 
+      dispatch(hideCompletedReducer());
     } 
+     
+    
 
   return ( 
     <View style={styles.container}>  
