@@ -1,11 +1,22 @@
 import * as React from 'react'; 
-import { StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native'; 
+import { StyleSheet, Text, View, Image, TouchableOpacity, Platform} from 'react-native'; 
 import TodoList from '../components/TodoList'; 
 import { todosData } from '../data/todos'; 
 import { useNavigation } from '@react-navigation/native'; 
 import { useSelector, UseDispatch, useDispatch } from 'react-redux'; 
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
-import { hideCompletedReducer, setTodosReducer } from '../redux/todosSlice';
+import { hideCompletedReducer, setTodosReducer } from '../redux/todosSlice'; 
+import * as Notifications from 'expo-notifications'; 
+import * as Device from 'expo-device'; 
+import moment from 'moment'; 
+ 
+Notifications.setNotificationHandler({ 
+  handleNotification: async () => ({ 
+    shouldShowAlert: true, 
+    shouldPlaySound: true, 
+    shouldSetBadge: true,
+  })
+})
 
 export default function Home() { 
    
@@ -13,11 +24,13 @@ export default function Home() {
     //const [localData, setLocalData] = React.useState(  
     //  todosData.sort((a, b) => {return a.isCompleted - b.isCompleted})
     //); 
-    const [isHiden, setIsHiden] = React.useState(false);  
+    const [isHiden, setIsHiden] = React.useState(false); 
+    const [expoPushToken, setExpoPushToken] = React.useState('');  
     const navigation = useNavigation(); 
     const dispatch = useDispatch();
      
-    React.useEffect(() => { 
+    React.useEffect(() => {  
+      registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
       const getTodos = async () => { 
         try { 
           const todos = await AsyncStorage.getItem("@Todos"); 
@@ -43,7 +56,34 @@ export default function Home() {
        
       setIsHiden(true); 
       dispatch(hideCompletedReducer());
-    } 
+    }  
+     
+    const registerForPushNotificationsAsync = async () => { 
+      let token; 
+      if(Device.isDevice) { 
+        const { status: existingStatus } = await Notifications.getPermissionsAsync(); 
+        let finalStatus = existingStatus; 
+        if(existingStatus !== 'granted') { 
+          const { status } = await Notifications.requestPermissionsAsync(); 
+          finalStatus = status;
+        } 
+        if(finalStatus !== 'granted') { 
+          alert('Failed to get push token for push notification!');
+          return;
+        } 
+        token = (await Notifications.getExpoPushTokenAsync()).data; 
+        console.log(token);
+      } else {return;} 
+      if(Platform.OS === 'android') { 
+        Notifications.setNotificationChannelAsync('default', { 
+          name: 'default', 
+          importance: Notifications.AndroidImportance.MAX, 
+          vibrationPattern: [0, 250, 250, 250], 
+          lightColor: '#FF231F7C',
+        });
+      } 
+      return token;
+    }
      
     
 

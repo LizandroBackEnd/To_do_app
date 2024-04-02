@@ -4,12 +4,14 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useDispatch, useSelector } from 'react-redux'; 
 import { addTodoReducer } from '../redux/todosSlice'; 
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native'; 
+import * as Notifications from 'expo-notifications';
  
 export default function AddTodo() {  
     const [name, setName] = React.useState(''); 
     const [date, setDate] = React.useState(new Date()); 
-    const [isToday, setIsToday] = React.useState(false); 
+    const [isToday, setIsToday] = React.useState(false);  
+    const [withAlert, setWithAlert] = React.useState(false);
     const [showPicker, setShowPicker] = React.useState(false); 
     const listTodos = useSelector(state => state.todos.todos);  
     const dispatch = useDispatch(); 
@@ -25,19 +27,38 @@ export default function AddTodo() {
         const newTodo = { 
             id: Math.floor(Math.random() * 1000000), 
             text: name,  
-            hour: date.toString(), 
+            hour: isToday ? date.toString() : new Date(date).getDate() + 24 * 60 * 60 * 1000,
             isToday: isToday, 
             isCompleted: false,
         } 
         try { 
             await AsyncStorage.setItem("@Todos", JSON.stringify([...listTodos, newTodo])); 
             dispatch(addTodoReducer(newTodo)); 
-            console.log('Todo saved successfully'); 
+            console.log('Todo saved successfully');   
+            if(withAlert) { 
+                await scheduleTodoNotification(newTodo);
+            }
             navigation.goBack();
         } catch (e) { 
             console.log(e);
         }
-    }
+    } 
+     
+    const scheduleTodoNotification = async (todo) => { 
+        const trigger = new Date(todo.hour); 
+        try { 
+            await Notifications.scheduleNotificationAsync({ 
+                content: { 
+                    title: "It's time!", 
+                    body: todo.text,
+                }, 
+                trigger,
+            }); 
+            console.log('Notification was scheduled successfully');
+        } catch (e) { 
+            alert('The notification failed to be schedule, make sure the hour is valid');
+        }
+    };
 
     return ( 
         <View style={styles.container}> 
@@ -69,17 +90,34 @@ export default function AddTodo() {
                     />
                 )}
             </View> 
-            <View style={styles.inputContainer}>  
+            <View style={styles.inputContainer}>   
+            <View> 
                 <Text style={styles.inputTitle}>Today</Text>  
+                <Text style={{ color: '#00000040', fontSize: 12, maxWidth: '85%' }}>If you disable today, the task will be considered as tomorrow</Text>  
+
+            </View>
+                
                 <Switch  
                     value={isToday}
                     onValueChange={(value) => {setIsToday(value)}} 
                 /> 
+            </View>    
+            <View style={[styles.inputContainer, {alignItems: 'center'}]}>  
+            <View>  
+                <Text style={styles.inputTitle}>Alert</Text>  
+                <Text style={{ color: '#00000040', fontSize: 12, maxWidth: '85%' }}>You will receive an alert at the time you set for this reminder</Text> 
+                    
             </View>  
+            <Switch  
+                value={withAlert}
+                onValueChange={(value) => {setWithAlert(value)}} 
+            /> 
+            
+            </View> 
             <TouchableOpacity style={styles.button} onPress={addTodo}> 
                 <Text style={{ color: '#fff' }}>Done</Text>
             </TouchableOpacity> 
-            <Text style={{ color: '#00000060' }}>If you disable today, the task will be considered as tomorrow</Text>
+            
         </View>
     )
 } 
