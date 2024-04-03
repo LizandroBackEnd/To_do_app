@@ -34,8 +34,17 @@ export default function Home() {
       const getTodos = async () => { 
         try { 
           const todos = await AsyncStorage.getItem("@Todos"); 
-          if(todos !== null) { 
-            dispatch(setTodosReducer(JSON.parse(todos)));
+          if(todos !== null) {  
+            const todosData = JSON.parse(todos); 
+            const todosDataFiltered = todosData.filter(todo => { 
+              return moment(new Date(todo.hour)).isSameOrAfter(moment(), 'day');
+            }) 
+            if(todosDataFiltered !== null) { 
+              await AsyncStorage.setItem("@Todos", JSON.stringify(todosDataFiltered)); 
+              console.log('We delete some passed todos'); 
+              dispatch(setTodosReducer(todosDataFiltered)); 
+            }
+            
           }
         } catch(e) { 
           console.log(e);
