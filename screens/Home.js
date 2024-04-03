@@ -107,10 +107,12 @@ export default function Home() {
             <TouchableOpacity onPress={handleHidePress}>  
             <Text style={{ color: '#3478f6' }}>{isHiden ? "Show Completed" : "Hide Completed"}</Text>     
             </TouchableOpacity> 
-        </View>
-        <TodoList todosData={todos.filter(todo => todo.isToday)} />
+        </View> 
+
+        <TodoList todosData={todos.filter(todo => moment(new Date(todo.hour)).isSame(moment(), 'day'))} /> 
+
         <Text style={styles.title}>Tomorrow</Text>  
-        <TodoList todosData={todos.filter(todo => !todo.isToday)} />
+        <TodoList todosData={todos.filter(todo => moment(new Date(todo.hour)).isAfter(moment(),'day'))} />
         <TodoList /> 
          
         <TouchableOpacity onPress={() => navigation.navigate("Add")} style={styles.button}>   
