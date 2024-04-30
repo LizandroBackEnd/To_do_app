@@ -1,5 +1,6 @@
 import * as React from 'react';  
-import { View, Text, TouchableOpacity, StyleSheet, Button, TextInput, Switch} from 'react-native';  
+import { View, Text, TouchableOpacity, StyleSheet, Button, TextInput} from 'react-native';   
+import { Switch } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useDispatch, useSelector } from 'react-redux'; 
 import { addTodoReducer } from '../redux/todosSlice'; 
@@ -68,7 +69,8 @@ export default function AddTodo() {
                 <TextInput   
                     style={ styles.textInput } 
                     placeholder="Task" 
-                    placeholderTextColor="#00000030" 
+                    placeholderTextColor="#00000030"  
+                    selectionColor="#000"
                     onChangeText={(text) => {setName(text)}}
                 />
             </View> 
@@ -97,10 +99,15 @@ export default function AddTodo() {
 
             </View>
                 
-                <Switch  
-                    value={isToday}
-                    onValueChange={(value) => {setIsToday(value)}} 
-                /> 
+            <View style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}>
+                <Switch
+                  trackColor={{ false: "#00000040", true: "#000" }}
+                  thumbColor={isToday ? "#FFF" : "#FFF"}
+                  ios_backgroundColor="#00000040"
+                  onValueChange={(value) => setIsToday(value)}
+                  value={isToday}
+                />
+            </View> 
             </View>    
             <View style={[styles.inputContainer, {alignItems: 'center'}]}>  
             <View>  
@@ -108,10 +115,17 @@ export default function AddTodo() {
                 <Text style={{ color: '#00000040', fontSize: 12, maxWidth: '85%' }}>You will receive an alert at the time you set for this reminder</Text> 
                     
             </View>  
-            <Switch  
-                value={withAlert}
-                onValueChange={(value) => {setWithAlert(value)}} 
-            /> 
+            <View style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}>  
+                <Switch  
+                    trackColor={{ false: "#00000040", true: "#000" }}
+                    thumbColor={isToday ? "#FFF" : "#FFF"}
+                    ios_backgroundColor="#00000040" 
+                    value={withAlert}
+                    onValueChange={(value) => {setWithAlert(value)}} 
+                />
+                 
+            </View> 
+             
             
             </View> 
             <TouchableOpacity style={styles.button} onPress={addTodo}> 
