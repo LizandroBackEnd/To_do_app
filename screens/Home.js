@@ -114,7 +114,7 @@ export default function Home() {
           ) : ( 
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
               <Image
-                source={require('../assets/nothingToday.png')}
+                source={{ uri: 'https://res.cloudinary.com/dqdmwsoan/image/upload/v1717630679/qpaogdknezckgpirs1fo.png' }}
 
                 style={{ width: 150, height: 150, marginBottom: 20, resizeMode: 'contain' }}
               />
@@ -129,7 +129,7 @@ export default function Home() {
           ) : ( 
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
               <Image
-                source={require('../assets/nothingTomorrow.png')}
+                source={{ uri: 'https://res.cloudinary.com/dqdmwsoan/image/upload/v1717630679/iihm1gtjfubznech0wt9.png'}}
 
                 style={{ width: 150, height: 150, marginBottom: 20, resizeMode: 'contain' }}
               />
@@ -150,7 +150,7 @@ export default function Home() {
           />
           <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}> 
           <Image
-                source={require('../assets/nothing.png')}
+                source={{  uri: 'https://res.cloudinary.com/dqdmwsoan/image/upload/v1717630679/o6t545057w7wnt7kywec.png' }}
                 style={{ width: 150, height: 150, marginBottom: 20, resizeMode: 'contain' }}
               />
             <Text style={{ fontSize: 13, color: '#000', fontWeight: 'bold' }}>NICE!</Text>
