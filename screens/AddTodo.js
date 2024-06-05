@@ -70,7 +70,7 @@ export default function AddTodo() {
                     style={ styles.textInput } 
                     placeholder="Task" 
                     placeholderTextColor="#00000030"  
-                    selectionColor="#000"
+                    selectionColor="#000000" 
                     onChangeText={(text) => {setName(text)}}
                 />
             </View> 
